@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_salutation" model="mail.template">
+            <field name="name">Sales Order: Send by email (salutation)</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Devis') or 'Commande' }} - {{ object.client_order_ref }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;">
+    <p style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px; font-size: 13px;">
+        <t t-set="doc_name" t-value="'devis' if object.state in ('draft', 'sent') else 'commande'" data-oe-t-inline="true"></t>
+        <t t-set="firstname" t-value="object.partner_id.name.split(' ')[0]" data-oe-t-inline="true"></t>
+        Salut <t t-out="firstname" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t>,
+        <br></p><p style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px; font-size: 13px;"><br>
+        Comme convenu voici notre
+        <t t-if="ctx.get('proforma')" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-group-active="true" data-oe-t-inline="true">
+            Facture Pro forma pour <t t-out="doc_name" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t> <strong style="box-sizing:border-box;font-weight:bolder;"><t t-out="object.name" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t></strong>
+            <t t-if="object.origin" data-oe-t-group="1" data-oe-t-group-active="true" data-oe-t-inline="true">
+                (avec la référence : <t t-out="object.origin" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t> )
+            </t>
+            d'un montant de <strong style="box-sizing:border-box;font-weight:bolder;"><t t-out="format_amount(object.amount_total, object.pricelist_id.currency_id)" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t></strong> est disponible.
+        </t>
+        <t t-else="" data-oe-t-selectable="true" data-oe-t-group="0" data-oe-t-inline="true">
+            <t t-out="doc_name" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t>
+            pour votre projet "<strong style="box-sizing:border-box;font-weight:bolder;"><t t-out="object.client_order_ref" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t></strong>"
+            .
+            <t t-if="object.origin" data-oe-t-group="2" data-oe-t-group-active="true" data-oe-t-inline="true">
+                (avec la référence : <t t-out="object.origin" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t> )
+            </t>
+        </t>
+        <br><br>
+        N'hésite pas à nous contacter si tu as des questions.
+        <br>
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="action_report_saleorder"/>
+            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
