@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="email_template_salutation" model="mail.template">
+        <record id="email_template_sale_salutation" model="mail.template">
             <field name="name">Bom de commande: Envoyer par mail (salutation)</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Devis') or 'Commande' }} - {{ object.client_order_ref }}</field>

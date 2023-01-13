@@ -8,9 +8,11 @@
     """,
     'author': 'JumpTo',
     'website': 'https://jumpto.ch',
-    'depends': ['mail'],
+    'depends': ['mail', 'sale','account'],
     'data': [
-        'data/salutaion_template.xml',
+        'data/accompte_salutation_template.xml',
+        'data/facture_salutation_template.xml',
+        'data/devis_salutaion_template.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_invoice_salutation" model="mail.template">
+            <field name="name">Acompte : Envoyer par mail (salutation)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">{{ object.company_id.name }} Acompte (Réf {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="margin:0px;padding: 0px;">
+    <p style="padding: 0px; font-size: 13px;">
+        <t t-set="firstname" t-value="object.partner_id.name.split(' ')[0]"/>
+        Salut <t t-out="firstname"/>,
+        <br/><br/>
+        J'espère que tu vas bien.
+        <br/><br/>
+        Voici un acompte pour ton projet <strong t-out=" object.ref"/>.
+        <t t-if="object.payment_state in ('paid', 'in_payment')" data-oe-t-group="3" data-oe-t-selectable="true" data-oe-t-group-active="true" data-oe-t-inline="true">
+            Cette facture est déjà payé.
+        </t>
+        <br/><br/>
+        N'hésite pas si tu as des questions.
+        <br/><br/>
+        Cordialement
+        <t t-if="object.invoice_user_id.signature" data-oe-t-group="5" data-oe-t-group-active="true" data-oe-t-inline="true">
+            <br/>
+            <t t-out="object.invoice_user_id.signature" data-oe-t-inline="true" oe-keep-contenteditable="" contenteditable="false"></t>
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="account.account_invoices"/>
+            <field name="report_name">Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
